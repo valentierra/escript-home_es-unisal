@@ -1,0 +1,1402 @@
+{{!< default}}
+
+{{!-- The big featured header --}}
+{{#get "posts" limit="5"
+                             include="authors,tags"
+                             filter="featured:true" as |featured| }}
+  <section class="featured-posts">
+    <div id="featured-posts__carousel" class="carousel slide"
+                 data-ride="carousel" data-interval="8000">
+
+          {{!-- Indicators --}}
+          <ol class="carousel-indicators featured-posts__indicators">
+                {{#foreach featured}}
+                    <li data-target="#featured-posts__carousel" data-slide-to="{{@index}}"
+                            class="{{#if @first}}active{{/if}}"></li>
+                {{/foreach}}
+          </ol>
+
+            {{!-- Featured post content --}}
+            <div class="carousel-inner featured-posts__inner">
+                {{#foreach featured}}
+                    <div class="featured-post item {{#if @first}}active{{/if}}">
+                        {{!-- Featured post image --}}
+                        <div class="lazyload blur featured-post__image"
+                                data-src="{{#if feature_image}}{{img_url feature_image}}{{/if}}"
+                                style="{{#if feature_image}}background-image: url({{img_url feature_image}})
+                                             {{else}}background-color: #000;{{/if}}">
+                        </div>
+                        {{!-- Featured post image overlay --}}
+                        <div class="featured-post__image--overlay"></div>
+                        <div class="featured-post__content">
+                            <div class="container">
+                                {{!-- Featured post tag (set to show only 1) --}}
+                                <!-- <p class="featured-post__tag animated fadeInDown">
+                                    in {{tags limit="1" separator=""}}
+                                </p> -->
+                                {{!-- Featured post title --}}
+                                <h2 class="featured-post__title animated fadeInRight">
+                                    <a href="{{url}}">{{title}}</a>
+                                </h2>
+                                <!-- <div class="featured-post__info animated fadeInRight">
+                                    <div class="featured-post__author">{{authors}}</div>
+                                    <div class="featured-post__date">
+                                        <time datetime="{{date format="YYYY-MM-DD"}}">
+                                            {{date published_at}}
+                                        </time>
+                                    </div>
+                                    <div class="featured-post__comments">
+                                        <i class="fa fa-clock-o"></i>
+                                        {{reading_time minute=(t "1 min read") minutes=(t "% min read")}}
+                                    </div>
+                                </div> -->
+                                <div class="read-more animated fadeInUp">
+                                    <a class="button button--light" href="{{url}}">{{t "Read more"}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/foreach}}
+          </div>
+
+          {{!-- Controls --}}
+          <div class="featured-posts__control-wrapper clearfix">
+                <a class="left carousel-control" href="#featured-posts__carousel"
+                     role="button" data-slide="prev">
+                    <div class="carousel-control-prev">
+                        <i class="fa fa-angle-left"></i>
+                    </div>
+                </a>
+                <a class="right carousel-control" href="#featured-posts__carousel"
+                     role="button" data-slide="next">
+                    <div class="carousel-control-next">
+                        <i class="fa fa-angle-right"></i>
+                    </div>
+                </a>
+          </div>
+
+        </div>
+  </section>
+{{/get}}
+
+<!-- Scrolling Content > History - Programs - Events - News Slider - Contact -->
+<style>
+    /* @import url('https://fonts.googleapis.com/css?family=Raleway:300,400,900'); */
+    body{
+    margin: 0;
+    padding: 0;
+    background-color: #FEFFFF;
+    /* font-family: 'Raleway', sans-serif; */
+    }
+
+    *::selection{
+    outline: none;
+    }
+
+    /*MENU*/
+    .nav{
+    text-align: center;
+    height: 70px;
+    line-height: 70px;
+    position: relative;
+    z-index: 3;
+    }
+
+    .menu{
+    margin: 0 30px 0 0;
+    }
+
+    .menu a{
+    clear: right;
+    text-decoration: none;
+    color: #FEFFFF;
+    margin: 0 10px;
+    line-height: 70px;
+    letter-spacing: .9px;
+    text-transform: uppercase;
+    transition: all 250ms ease;
+    }
+
+    @keyframes strike{
+    0%   { width : 0; }
+    100% { width: 100%; }
+    }
+
+    .strike {
+    position: relative;
+    }
+
+    .strike:hover:after {
+    content: ' ';
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #FEFFFF;
+    animation-name: strike;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+    }
+
+    .menu h5{
+    margin: 0 30px;
+    text-transform: uppercase;
+    float: left;
+    font-weight: 300;
+    font-size: 25px;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 999;
+    color: #FEFFFF;
+    }
+
+    label{
+    margin: 0 20px 0 0;
+    font-size: 26px;
+    line-height: 70px;
+    display: none;
+    width: 26px;
+    float: right;
+    color: #354757;
+    }
+
+    #toggle{
+    display: none;
+    }
+
+    .fixed{
+    background-color: #FEFFFF;
+    }
+
+    .photo{
+    width: 100%;
+    height: 700px;
+    position: relative;
+    background: url('https://res.cloudinary.com/hr2tekaxa/image/upload/v1602694102/Home%20Page/tyler-nix-V3dHmb1MOXM-unsplash_rslhbj.jpg') center;
+    background-size: cover;
+    overflow: hidden;
+    }
+
+    .photo-text{
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .overlay{
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 200vh;
+    top: 0;
+    left: 0;
+    background: rgba(60, 63, 114, .6);
+    }
+
+    .photo h4{
+    font-size: 60px;
+    /* text-transform: uppercase; */
+    letter-spacing: 1.2px;
+    color: #FEFFFF;
+    margin: 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+    }
+
+    .photo p{
+    width: 60%;
+    text-align: center;
+    letter-spacing: 1.5px;
+    color: #D7DADE;
+    position: relative;
+    z-index: 3;
+    }
+
+    .content{
+    width: 100%;
+    min-height: 300px;
+    position: relative;
+    z-index: 1;
+    }
+
+    .content:before{
+    content: '';
+    width: 50%;
+    height: 110px;
+    position: absolute;
+    top: -48px;
+    left: 0;
+    background-color: #FEFFFF;
+    transform: skewY(5.5deg);/*8*/
+    }
+
+    .content:after{
+    content: '';
+    width: 50%;
+    height: 110px;
+    position: absolute;
+    top: -48px;
+    right: 0;
+    background-color: #FEFFFF;
+    transform: skewY(-5.5deg);/*8*/
+    }
+
+    .grand-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 999;
+    width: 60%;
+    min-height: 100px;
+    padding: 0;
+    margin: 0 auto;
+    }
+
+    .grand-title h4{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    margin: 30px;
+    color: #354757;
+    }
+
+    .grand-title h4:after{
+    content: '';
+    display: block; 
+    width: 5%;
+    height: 3px;
+    margin: 25px auto;
+    border: 0;
+    background: #E58859;
+    }
+
+    .text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: -10px;
+    position: relative;
+    z-index: 999;
+    }
+
+    .inner-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+    padding: 20px;
+    width: 300px;
+    margin: 10px 0 10px 0;
+    transition: all 450ms ease;
+    }
+
+    .inner-text:hover{
+    cursor: pointer;
+    box-shadow: -1px 6.5px 15px rgba(208, 211, 214, 0.75);
+    }
+
+    .ic{
+    font-size: 35px;
+    color: #EBA675;
+    transition: all 250ms ease;
+    }
+
+    .ic:hover{
+    opacity: .7;
+    }
+
+    .inner-text h3{
+    color: #299FFF;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    }
+
+    .inner-text h5{
+    color: #6D85A8;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    }
+
+    .inner-text p{
+    color: #6D85A8;
+    }
+
+    .inner-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    }
+
+    .boxy:nth-child(1){
+    width: 50%;
+    min-height: 200px;
+    background: url('https://img.fenixzone.net/i/dxmDY9u.png') bottom no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 999;
+    }
+
+    .boxy:nth-child(2){
+    width: 50%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    }
+
+    #slider{
+    overflow: hidden;
+    margin: -50px 0px 0px -50px;
+    /* margin-left: -20px; */
+    }
+
+    #slider figure ul li{
+    width: 20%;
+    float: left;
+    list-style: none;
+    text-align: center;
+    }
+
+    ul li img{
+    border-radius: 50%;
+    padding: 10px;
+    }
+
+    ul li h4{
+    color: #354757;
+    font-weight: 300;
+    font-size: 25px;
+    }
+
+    ul li p{
+    font-size: 20px;
+    width: 80%;
+    margin: 0 auto;
+    color: #6D85A8;
+    }
+
+    #slider figure{
+    position: relative;
+    width: 500%;
+    margin: 0;
+    left: 0;
+    text-align: center;
+    animation-name: slider;
+        animation-duration: 50s;
+        animation-timing-function: linear;
+        animation-delay: -4s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+    }
+
+    /*Portafolio*/
+    .portafolio{
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-top: -35px;
+    margin-bottom: 40px;
+    }
+
+    .portafolio h4{
+    text-align: center;
+    font-weight: 400;
+    font-size: 40px;
+    color: #354757;
+    letter-spacing: 1.2px;
+    }
+
+    .portafolio h4:after{
+    content: '';
+    display: block; 
+    width: 3%;
+    height: 3px;
+    margin: 20px auto;
+    border: 0;
+    background: #E58859;
+    }
+
+    .portafolio-container{
+    display: flex;
+    justify-content: space-between;
+    }
+
+    .portafolio-item{
+    width: 30%;
+    position: relative;
+    overflow: hidden;
+    border-radius: .20em;
+    }
+
+    .portafolio-item img{
+    width: 100%;
+    }
+
+    .portafolio-text{
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    background: rgba(254, 255, 255, .8);
+    color: #FDFDFD;
+    transform: translateY(100%);
+    transition: all 450ms ease;
+    }
+
+    .portafolio-text h5{
+    color: #299FFF;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 0;
+    }
+
+    .portafolio-text p{
+    text-align: justify;
+    color: #6D85A8;
+    }
+
+    .portafolio-item:hover .portafolio-text{
+    transform: translateY(0);
+    }
+
+    .portafolio-img{
+    transition: all 450ms ease;
+    }
+
+    .portafolio-item:hover .portafolio-img{
+    transform: rotate(-5deg) scale(1.15);
+    }
+
+    /*FOOTER*/
+    /* .footer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-height: 500px;
+    width: 100%;
+    }
+
+    .footer h4{
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    margin: 30px;
+    color: #354757;
+    }
+
+    .footer h4:after{
+    content: '';
+    display: block; 
+    width: 25%;
+    height: 3px;
+    margin: 20px auto;
+    border: 0;
+    background: #E58859;
+    }*/
+
+    .container{
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    }
+
+    .container *{
+    box-sizing: border-box;
+    }
+
+    .flex-outer,
+    .flex-inner{
+    list-style-type: none;
+    padding: 0;
+    }
+
+    .flex-outer{
+    max-width: 800px;
+    margin: 0 auto;
+    }
+
+    .flex-outer li,
+    .flex-inner{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    }
+
+    .flex-inner{
+    padding: 0 8px;
+    justify-content: space-between;  
+    }
+
+    .flex-outer > li:not(:last-child){
+    margin-bottom: 20px;
+    }
+
+    .flex-outer li label{
+    padding: 8px;
+    font-weight: 300;
+    font-size: 15px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    }
+
+    .flex-outer > li > label{
+    flex: 1 0 120px;
+    max-width: 220px;
+    }
+
+    .flex-outer > li > label + *,
+    .flex-inner{
+    flex: 1 0 220px;
+    }
+
+    .flex-outer li input:not([type='checkbox']),
+    .flex-outer li textarea{
+    padding: 15px;
+    resize: none;
+    }
+
+    .flex-outer li button{
+    background: 0 0 #FEFFFF;
+    border: 1px solid #6D85A8;
+    border-radius: 3px;
+    color: #6D85A8;
+    font-size: 16px;
+    line-height: inherit;
+    margin: 30px 0;
+    padding: 10px 50px;
+    text-transform: uppercase;
+    transition: all 0.25s ease 0s;
+    }
+
+    .flex-outer li button:hover,
+    .flex-outer li button:active,
+    .flex-outer li button:focus {
+        border-color: #299FFF;
+        color: #299FFF;
+    }
+
+    .flex-inner li{
+    width: 100px;
+    }
+
+    .rect{
+        border-color: #6D85A8;
+    border-width: 0 0 1px 0;
+    border-style: none none solid none;
+    box-shadow: none;
+    }
+
+    .rect:focus{
+        box-shadow: none;
+        border-color: #60A9F1;
+    outline: none;
+    }
+
+    .center{
+    display: flex;
+    justify-content: flex-end;
+    }
+
+    .flex-outer li ::placeholder{
+    font-size: 12px;
+    color: #6D85A8;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+
+    .flex-outer li ::-webkit-input-placeholder{
+    font-size: 12px;
+    color: #6D85A8;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+
+    .flex-outer li ::-moz-placeholder{
+    font-size: 12px;
+    color: #6D85A8;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+
+    .flex-outer li ::-ms-input-placeholder{
+    font-size: 12px;
+    color: #6D85A8;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+
+    .flex-outer li ::-moz-placeholder{
+    font-size: 12px;
+    color: #6D85A8;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+
+    input{
+    font-family: 'Raleway', sans-serif;
+    }
+
+    @media screen and (max-width: 950px){
+    .portafolio-container{
+        flex-flow: column wrap;
+        align-items: center;
+    }
+    
+    .portafolio-item{width: 80%; margin-top: 10px;}
+    }
+
+    @media screen and (max-width: 950px){
+    .photo p{width: 90%;}
+    .grand-title{width: 90%;}
+    .text{flex-direction: column;}
+    .inner-content{flex-flow: column wrap;}
+    .boxy:nth-child(1),.boxy:nth-child(2){width: 90%;}/*GENERA PROBLEMA*/
+    .boxy:nth-child(1){padding: 10px;}
+    #slider{margin-left: -55px;}
+    }
+
+    @media only screen and (max-width: 600px){
+    label{
+        display: block;
+        cursor: pointer;
+    }
+    .menu{
+        text-align: center;
+        width: 100%;
+        display: none;
+    }
+    .menu a{
+        display: block;
+        border-bottom: 1px solid #EAEAEB;
+        margin: 0;
+        color: #6D85A8;
+    }
+    #toggle:checked + .menu{display: block; background-color: #FEFFFF;}
+    }
+
+    @media screen and (max-width: 500px){
+    #slider{margin-left: -55px;}
+    .photo-text h4{font-size: 45px;}
+    .inner-text{width: 80%;}
+    }
+
+    @keyframes slider{
+    0%{left: 0; opacity: 0;}
+    20%{left: 0; opacity: 1;}
+    25%{left: -100%; opacity: .8;}
+    45%{left: -100%; opacity: .8;}
+    50%{left: -200%; opacity: .7;}
+    70%{left: -200%; opacity: .7;}
+    75%{left: -300%; opacity: .6;}
+    95%{left: -400%; opacity: .6;}
+    100%{left: -400%; opacity: 1;}
+    }
+
+    .btn1 {
+    display: inline-block;
+    padding: 13px 20px;
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+    background: transparent;
+    border: 1px solid #c85638;
+    border-radius: 4px;
+    font: 12px/1.2 "Oswald", sans-serif;
+    letter-spacing: 0.4em;
+    text-align: center;
+    text-indent: 2px;
+    text-transform: uppercase;
+    transition: color 0.1s linear 0.05s;
+    }
+
+    .btn1::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #c85638;
+    z-index: 1;
+    opacity: 0;
+    transition: height 0.2s ease, top 0.2s ease, opacity 0s linear 0.2s;
+    }
+        
+    .btn1::after {
+    transition: border 0.1s linear 0.05s;
+    }
+        
+    .btn1 .btn1-inner {
+    position: relative;
+    z-index: 2;
+    }
+    .btn1:hover {
+    text-decoration: none;  
+    color: #fff; 
+    transition: color 0.1s linear 0s;
+    }
+    .btn1:hover::before {
+    top: 0;
+    height: 100%;
+    opacity: 1;
+    transition: height 0.2s ease, top 0.2s ease, opacity 0s linear 0s;
+    }
+    .btn1:hover::after {  
+    border-color: #c85638;
+    transition: border 0.1s linear 0s;
+    }
+    
+</style>
+
+<section>
+    <!-- Intro & History Section -->
+    <section class="photo" id="historia">
+        <!-- <div class="nav" id="sticker">
+            <label for="toggle">&#9776</label>
+            <input type="checkbox" id="toggle" />
+            <div class="menu">
+                <!-- <h5 class="logo">LOGO</h5>
+                <a href="#historia">historia</a>
+                <a href="#programas">programas</a>
+                <a href="#eventos">eventos</a>
+                <a href="#novedades">novedades</a>
+                <!-- <a href="#contacto">contacto</a>
+            </div>
+        </div> -->
+        <div class="photo-text">
+            <h4 data-ix="slowfade-scroll-bigs">¡Unidos somos más fuertes!</h4>
+            <p data-ix="subtitle-hero-up">En 2001, una terremoto en El Salvador movió más que la tierra. En EEUU, Ana Miriam Carpio une esfuerzos con familiares y amigos para ayudar a la región devastada, dándole origen a UNISAL. De click al botón "Quienes Somos" para conocer más sobre nuestra organización.</p>
+        </div>
+        <div align="center">
+            <a href="https://unisal.org/aboutus/" class="btn1">
+                <span class="btn1-inner" style="color: whitesmoke">Quienes Somos</span>
+            </a>    
+            <p></p>
+        </div>
+        <div class="overlay"></div>
+    </section>
+
+    <!-- Portafolio Section -->
+    <section class="content">
+        <!-- Portafolio - Programs Section -->
+        <div class="grand-title" id="programas">
+            <h4 data-ix="slowfade-scroll-bigs">Nuestros Programas</h4>
+        </div>
+        <section class="portafolio">
+            <div class="text">   
+                <div class="inner-text">
+                    <h3 data-ix="slowfade-scroll-bigs">Educación Financiera</h3>
+                    <i class="ic ion-fork"></i>
+                    <div class="text-box">
+                        <h5 data-ix="slowfade-scroll-bigs">Cursos & Estrategia Financiera</h5>
+                        <p data-ix="slowfade-scroll-bigs">Desarrollamos todo su potencial para hacer crecer su dinero y brindar la tranquilidad y bienestar que Usted y su familia se merecen.</p>
+                    </div>
+                </div>
+                <div class="inner-text">
+                    <h3 data-ix="slowfade-scroll-bigs">Apoyo al Inmigrante</h3>
+                    <i class="ic ion-knife"></i>
+                    <div class="text-box">
+                        <h5 data-ix="slowfade-scroll-bigs">Derechos Civiles & Trámites</h5>
+                        <p data-ix="slowfade-scroll-bigs">Abogamos a nivel estatal y nacional por sus derechos. Ayudamos a quienes tienen problemas migratorios.</p>
+                    </div>
+                </div>
+                <div class="inner-text">
+                    <h3 data-ix="slowfade-scroll-bigs">Programas Humanitarios</h3>
+                    <i class="ic ion-spoon"></i>
+                    <div class="text-box">
+                        <h5 data-ix="slowfade-scroll-bigs">Recursos para emergencias</h5>
+                        <p data-ix="slowfade-scroll-bigs">Canalizamos ayudas para aliviar desastres naturales, calamidades domésticas y personas con urgencias.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portafolio - Events Section -->
+        <div class="grand-title" id="eventos">
+            <h4 data-ix="slowfade-scroll-bigs">Principales Eventos</h4>
+        </div>
+        <section class="portafolio">
+            <div class="portafolio-container">
+                <section class="portafolio-item">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602706846/Home%20Page/chuttersnap-irfc5UukUn4-unsplash_arojnx.jpg" alt="" class="portafolio-img" />
+                    <section class="portafolio-text">
+                        <h5>Banquete de Aniversario</h5>
+                        <p>Desde abril de 2021, celebraremos el "Banquete de Aniversario" de UNISAL, con el fin de recaudar fondos para cubrir nuestras actividades y programas humanitarios.</p>
+                    </section>
+                </section>
+                <section class="portafolio-item">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602707372/Home%20Page/hitoshi-namura-nzEZBYpQmeg-unsplash_cwuvib.jpg" alt="" class="portafolio-img"/>
+                    <section class="portafolio-text">
+                        <h5>Hola Charlotte Festival!</h5>
+                        <p>Todos los 12 de Octubre, se celebra el evento cultural hispano más grande de la ciudad.</p>
+                    </section>
+                </section>
+                <section class="portafolio-item">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602706438/Home%20Page/ben-white-dddQHervE04-unsplash_jtilyr.jpg" alt="" class="portafolio-img"/>
+                    <section class="portafolio-text">
+                        <h5>Navidad para los todos los Niños</h5>
+                        <p>Desde 2001, nuestra tradicional entrega de regalos para niños necesitados.</p>
+                    </section>
+                </section>
+            </div>
+        </section>
+
+        <!-- News Slider Section -->
+        <!--
+        <div class="grand-title" id="novedades">
+            <h4 data-ix="slowfade-scroll-bigs">Novedades</h4>
+        </div>
+        <section class="content">
+            <div class="inner-content">
+                <div class="boxy">
+                    <div id="slider">
+                        <figure>
+                            <ul>
+                                <li>
+                                    <h4>Voluntariado</h4>
+                                    <img src="https://unsplash.it/80?image=823" alt="" />
+                                    <p>Se reciben CVs para voluntarios hasta el x de Nov de 2020.</p>
+                                </li>
+                                <li>
+                                    <h4>Cursos</h4>
+                                    <img src="https://unsplash.it/80?image=823" alt="" />
+                                    <p>Nueva temporada de cursos financieros para principiantes a partir de Dic de 2020</p>
+                                </li>
+                                <li>
+                                    <h4>Convenios</h4>
+                                    <img src="https://unsplash.it/80?image=823" alt="" />
+                                    <p>UNISAL formaliza un convenio de cooperación con Carpio y Asociados</p>
+                                </li>
+                                <li>
+                                    <h4>Servicios Consulares</h4>
+                                    <img src="https://unsplash.it/80?image=823" alt="" />
+                                    <p>El consulado de El Salvador abrirá nueva sede en Wiston Salem.</p>
+                                </li>
+                            </ul>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+        -->
+
+    </section>
+
+    <!-- Optional Contact Form
+    <div class="footer" id="contacto">
+        <h4 data-ix="slowfade-scroll-bigs">Contacto</h4>
+        <div class="container">
+            <form action="enviar.php" method="post">
+                <ul class="flex-outer">
+                    <li>
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" placeholder="Ingresa Nombre" class="rect" required>
+                    </li>
+                    <li>
+                        <label for="correo">Correo</label>
+                        <input type="email" name="correo" placeholder="Ingresa Correo" class="rect" required>
+                    </li>
+                    <li>
+                        <label for="fono">Teléfono</label>
+                        <input type="text" name="telefono" placeholder="Ingresa Teléfono" class="rect" required>
+                    </li>
+                    <li>
+                        <label for="mensaje">Mensaje</label>
+                        <textarea rows="6" name="mensaje" class="rect" required></textarea>
+                    </li>
+                    <li class="center">
+                        <button type="submit">Enviar</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    -->
+
+</section>
+<!-- End Scrolling Content -->
+
+{{!-- Counters --}}
+<style>
+/*STATISTICS*/
+.statistic-section {
+    box-sizing: border-box;
+    padding-top: 70px;
+    padding-bottom: 70px;
+    background: #58595B;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #58595B, #58595B);
+    background: linear-gradient(to right, #58595B, #58595B); 
+}
+.count-title {
+   font-size: 40px;
+   font-weight: normal;
+   margin-top: 10px;
+   margin-bottom: 0;
+     text-align: center;
+     font-weight: bold;
+   color: #fff;
+}
+.stats-text {
+   font-size: 19px;
+   font-weight: normal;
+   margin-top: 15px;
+   margin-bottom: 30px;
+   text-align: center;
+     color: #fff;
+     text-transform: uppercase;
+     font-weight: bold;
+}
+.stats-line-black {
+   margin: 12px auto 0;
+   width: 55px;
+   height: 2px;
+   background-color: #fff;
+}
+.stats-icon {
+     font-size: 35px;
+     margin: 0 auto;
+   float: none;
+   display: table;
+   color: #fff;
+}
+</style>
+
+<section id="statistic" class="statistic-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-line-chart fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">500</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Consultorias Financieras</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-users fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">200000</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Familias Asesoradas</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-street-view fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">500000</p></h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Beneficiarios</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-calendar-check-o fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">500</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Eventos</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-heart fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">100</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Voluntarios</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <div class="counter">
+                        <i class="fa fa-clock-o fa-2x stats-icon"></i>
+                        <a class="count-title">+</a>
+                        <h2 class="timer count-title count-number">19</h2>
+                        <div class="stats-line-black"></div>
+                        <p class="stats-text">Años de Experiencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js'></script>
+</section>
+
+<script>
+    $(document).ready(function($) {
+    $('.count-number').counterUp({
+        delay: 10,
+        time: 1000
+        })
+    })
+</script>
+
+{{!-- Testimonial --}}
+<style>
+    #testimonials {
+        background: #f9f9f9;
+        min-height: 80vh;
+        padding-top: 70px;
+        padding-bottom: 70px;
+    }
+    .center-heading {
+        text-align: center;
+    }
+
+    .center-heading .section-title {
+        font-weight: 400;
+        font-size: 28px;
+        color: #3B566E;
+        letter-spacing: 1.75px;
+        line-height: 38px;
+        margin-bottom: 20px;
+    }
+
+    .center-heading.colored .section-title {
+        color: #ffffff;
+    }
+
+    .center-text {
+        text-align: center;
+        font-weight: 400;
+        font-size: 16px;
+        color: #6F8BA4;
+        line-height: 28px;
+        letter-spacing: 1px;
+        margin-bottom: 50px;
+    }
+
+    .center-text.colored {
+        color: #C7E5FF;
+    }
+
+    .center-text p {
+        margin-left: auto;
+        margin-bottom: 50px;
+    }
+    .testimonials-item {
+        display: block;
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .testimonials-item:hover .user {
+        top: -20px;
+    }
+
+    .testimonials-item:hover .testimonials-content:before {
+        opacity: 1;
+    }
+
+    .testimonials-item:hover .testimonials-content .user-name {
+        color: #fff;
+    }
+
+    .testimonials-item:hover .testimonials-content .txt:before, .testimonials-item:hover .testimonials-content .txt:after {
+        opacity: .1;
+    }
+
+    .testimonials-item:hover .testimonials-content span, .testimonials-item:hover .testimonials-content p {
+        color: #C7E5FF !important;
+    }
+
+    .testimonials-item .user {
+        width: 88px;
+        height: 88px;
+        position: relative;
+        position: absolute;
+        top: -10px;
+        left: 25px;
+        z-index: 3;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.06);
+    }
+    .testimonials-item .user img{
+        max-width: 100%;
+    }
+
+    .testimonials-item .testimonials-content {
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.06);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .testimonials-item .testimonials-content:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background-image: linear-gradient(135deg, #004e92 0%, #000428 100%);
+        opacity: 0;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+    .testimonials-item .testimonials-content .user-name {
+        display: block;
+        font-weight: 400;
+        font-size: 16px;
+        color: #3B566E;
+        margin-top: 20px;
+        padding-left: 130px;
+        letter-spacing: 0.69px;
+        margin-bottom: 5px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .testimonials-item .testimonials-content span {
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        color: #6F8BA4;
+        letter-spacing: 0.6px;
+        padding-left: 130px;
+        padding-right: 25px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .testimonials-item .testimonials-content .txt {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .testimonials-item .testimonials-content .txt:before {
+        font-family: FontAwesome;
+        content: "\f10d";
+        position: absolute;
+        left: 25px;
+        top: 25px;
+        color: #3B566E;
+        z-index: 1;
+        font-size: 40px;
+        opacity: .4;
+        color: #e1ecf4;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+
+    .testimonials-item .testimonials-content .txt:after {
+        font-family: FontAwesome;
+        content: "\f10e";
+        position: absolute;
+        right: 25px;
+        bottom: 15px;
+        color: #3B566E;
+        z-index: 1;
+        font-size: 40px;
+        opacity: .4;
+        color: #e1ecf4;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+
+    .testimonials-item .testimonials-content .txt p {
+        padding-left: 25px;
+        padding-right: 25px;
+        margin-bottom: 25px;
+        margin-top: 40px;
+        font-weight: 400;
+        font-size: 14px;
+        color: #6F8BA4;
+        letter-spacing: 0.6px;
+        line-height: 26px;
+        position: relative;
+        z-index: 3;
+    }
+</style>
+
+<section class="section pb-5 pt-5" id="testimonials">
+    <div class="container">
+    <!-- ***** Section Title Start ***** -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="center-heading">
+                    <h2 class="section-title">Testimonios</h2>
+                </div>
+            </div>
+        <div class="offset-lg-3 col-lg-12">
+            <div class="center-text">
+                <p>Las sensibles apreciaciones de nuestros beneficiarios nos llenan de orgullo y motivan permanentemente nuestro trabajo.</p>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Section Title End ***** -->
+
+    <div class="row testimonials-wrapper">
+    <!-- ***** Testimonials Item Start ***** -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="testimonials-item">
+                <div class="user">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602709043/Home%20Page/Fede_2014_Avatar_cgqw1g.png" alt="">
+                </div>
+                <div class="testimonials-content">
+                    <h3 class="user-name">Fede 2014</h3>
+                    <span>Agosto 23 2018</span>
+                    <div class="txt">
+                        <p>Ayudan mucho a las personas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- ***** Testimonials Item End ***** -->
+
+    <!-- ***** Testimonials Item Start ***** -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="testimonials-item">
+                <div class="user">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602711187/Home%20Page/Familia_Castillo_Alvarez3_ckbq6y.png" alt="">
+                </div>
+                <div class="testimonials-content">
+                    <h3 class="user-name">Familia Castillo Alvarez</h3>
+                    <span>Octubre 13 2020</span>
+                    <div class="txt">
+                        <p>Damos las gracias a la Sra. Miriam por ayudarnos con el rollover del 401K para nuestro retiro.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- ***** Testimonials Item End ***** -->
+
+    <!-- ***** Testimonials Item Start ***** -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="testimonials-item">
+                <div class="user">
+                    <img src="https://res.cloudinary.com/hr2tekaxa/image/upload/v1602710841/Home%20Page/Abigail_Molina_nntgnt.png" alt="">
+                </div>
+                <div class="testimonials-content">
+                    <h3 class="user-name">Abigail Molina</h3>
+                    <span>Enero 09 2019</span>
+                    <div class="txt">
+                        <p>Great place to do paper work, great prices too.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- ***** Testimonials Item End ***** -->
+    </div>
+</section>
+<!-- ***** Testimonials End ***** -->
+
+<!-- ***** Contact ***** -->
+<style>
+    .home-contact{
+        box-sizing: border-box;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        background: #58595B;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #58595B, #58595B);
+        background: linear-gradient(to right, #58595B, #58595B);
+        }
+
+    .home-info{
+        color: whitesmoke;
+    }
+
+</style>
+
+<section class="home-contact">
+    <div class="contact">
+        <div class="row">
+        {{!-- Blog contact info --}}
+            <div class="col-sm-6 col-xs-12 contact-address animated fadeInLeft">
+                <h3 class="contact-address__title">{{@site.title}}</h3>
+                <p> 3715 Latrobe Dr, Unit 630<br>
+                    Charlotte<br>
+                    North Carolina<br>
+                    28211<br>
+                </p>
+                <p><strong>Tel: </strong><a class="home-info" href="tel:7045216166">704-521-6166</a></p>
+                <p><strong>Email: </strong><a class="home-info" href="mailto:info@unisal.ong">info@unisal.ong</a></p>
+                {{>social-media}}
+            </div>
+
+        {{!-- Blog contact form --}}
+            <div class="col-sm-6 col-xs-12 contact__form-wrapper animated fadeInRight">
+                <form action="//formspree.io/youremail@domain.com" id="contact-form"
+                    class="contact-form clearfix" method="post">
+                    <h3 class="contact-form__title">{{t "Message"}}</h3>
+                    <input type="text" name="username" id="username"
+                        class="contact-form__name placeholder-light"
+                        title="Name" placeholder="Name" required>
+                    <input type="text" name="email" id="email" title="Email"
+                        class="contact-form__email placeholder-light"
+                        placeholder="Email" required>
+                    <textarea rows="2" name="message" id="message" title="Message"
+                        class="placeholder-light" placeholder="Message" required>
+                    </textarea>
+                    <input type="text" name="_gotcha" style="display:none">
+                    <input class="button button--light" type="submit" name="submit"
+                        id="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{!-- Google map with headquaters location --}}
+<section>
+    <style>
+        /* Set the size of the div element that contains the map */
+        .map {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%;
+        }
+
+        /* Then style the iframe to fit in the container div with full height and width */
+        .responsive-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+    
+    </style>
+
+    <!--The div element for the map -->
+    <div class="map">
+        <iframe class="responsive-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3260.4222546169012!2d-80.79826948509535!3d35.19594976404079!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88541fd22daff137%3A0xf60b3b270a080a5d!2sUNISAL!5e0!3m2!1sen!2sus!4v1602438547376!5m2!1sen!2sus" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+    </div>
+</section>
+
+{{!-- Email subscribe form at the main page --}}
+{{> subscribe}}
